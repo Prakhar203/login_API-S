@@ -1,8 +1,8 @@
 from xml.dom import ValidationErr
 from rest_framework import serializers
 from account.models import User
-# from django.utils.encoding import smart_str,force_bytes,DjangoUnicodeDecodeError
-# from django.utils.http import urlsafe_base64_decode,urlsafe_base64_encode
+from django.utils.encoding import smart_str,force_bytes,DjangoUnicodeDecodeError
+from django.utils.http import urlsafe_base64_decode,urlsafe_base64_encode
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 
 
@@ -32,44 +32,44 @@ class UserLoginSerializer(serializers.ModelSerializer):
         model = User
         fields = ['email','password']
 
-# class UserProfileSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = User
-#         fields = ['id','email','name']
+class UserProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id','email','name']
 
-# class UserChangepasswordSerializer(serializers.Serializer):
-#     password = serializers.CharField(max_length = 255,style ={'input_type':'password'},write_only = True)
-#     password2 = serializers.CharField(max_length = 255,style ={'input_type':'password'},write_only = True)
-#     class Meta:
-#         fields = ['password','password2']
+class UserChangepasswordSerializer(serializers.Serializer):
+    password = serializers.CharField(max_length = 255,style ={'input_type':'password'},write_only = True)
+    password2 = serializers.CharField(max_length = 255,style ={'input_type':'password'},write_only = True)
+    class Meta:
+        fields = ['password','password2']
 
-# def validate(self, attrs):
-#     password = attrs.get('password')
-#     password2 = attrs.get('password2')
-#     user = self.context.get('user')
-#     if password != password2:
-#         raise serializers.ValidationError("Password and password2 doesn't match")
-#         user.set_password(password)
-#         user.save()
-#     return attrs
+def validate(self, attrs):
+    password = attrs.get('password')
+    password2 = attrs.get('password2')
+    user = self.context.get('user')
+    if password != password2:
+        raise serializers.ValidationError("Password and password2 doesn't match")
+        user.set_password(password)
+        user.save()
+    return attrs
 
-# class SendPasswordResetEmailSerializer(serializers.Serializer):
-#     email = serializers.EmailField(max_length = 255)
-#     class Meta:
-#         fields = ['email']
+class SendPasswordResetEmailSerializer(serializers.Serializer):
+    email = serializers.EmailField(max_length = 255)
+    class Meta:
+        fields = ['email']
 
-# def validate(self, attrs):
-#     email = attrs.get('email')
-#     if User.objects.filter(email = email).exists():
-#         user = User.objects.get(email = email)
-#         uid = urlsafe_base64_encode(force_bytes(user.id))
-#         print("Encoded UID",uid)
-#         token = PasswordResetTokenGenerator().make_token(user)
-#         print('Password Reset Token',token)
-#         link = 'https://localhost:3000/api/user/reset/'+uid+'/'+token
-#         print('Password Reset link',link)
-#         return attrs
-#     else:
-#         raise ValidationErr('You are not a registered User')
+def validate(self, attrs):
+    email = attrs.get('email')
+    if User.objects.filter(email = email).exists():
+        user = User.objects.get(email = email)
+        uid = urlsafe_base64_encode(force_bytes(user.id))
+        print("Encoded UID",uid)
+        token = PasswordResetTokenGenerator().make_token(user)
+        print('Password Reset Token',token)
+        link = 'https://localhost:3000/api/user/reset/'+uid+'/'+token
+        print('Password Reset link',link)
+        return attrs
+    else:
+        raise ValidationErr('You are not a registered User')
 
 

@@ -1,8 +1,6 @@
 from django.contrib import admin
 from account.models import User
-
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-
 
 # This code is user to change the superuser django admin face to the line 37 it is useful for changing django admin pannel.
 class UserModelAdmin(BaseUserAdmin):
